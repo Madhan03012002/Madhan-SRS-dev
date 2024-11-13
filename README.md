@@ -10,7 +10,9 @@ This is a **minimal backend cloud storage solution** built with Node.js microser
 - **File Management Service**: Handles file upload and download functionality.
 - **Email Notification Service**: Sends email notifications upon user registration and file upload.
 
-### Technologies Used
+---
+
+## Technologies Used
 
 - **Node.js** - Server-side JavaScript runtime.
 - **Express.js** - Web framework to create the REST APIs.
@@ -20,21 +22,23 @@ This is a **minimal backend cloud storage solution** built with Node.js microser
 - **Nodemailer** - For sending email notifications.
 - **Postman** - For API testing and documentation.
 
+---
+
 ## Microservices Overview
 
 The application is divided into the following services:
 
-1. **Authentication Service**
+1. **Authentication Service**:
    - Registers users.
    - Logs users in and provides JWT tokens for secure access.
 
-2. **User Management Service**
+2. **User Management Service**:
    - Allows users to view and update their profile information.
 
-3. **File Management Service**
+3. **File Management Service**:
    - Allows users to upload and download their files.
 
-4. **Email Notification Service**
+4. **Email Notification Service**:
    - Sends email notifications for events like registration and file uploads.
 
 ---
@@ -66,9 +70,22 @@ Before you can run the application, ensure that the following tools are installe
    npm install
    ```
 
+   Then, for each individual service (`authentication-service`, `user-management-service`, `file-management-service`, `email-notification-service`), navigate to their respective directories and install dependencies:
+
+   ```bash
+   cd services/authentication-service
+   npm install
+   cd services/user-management-service
+   npm install
+   cd services/file-management-service
+   npm install
+   cd services/email-notification-service
+   npm install
+   ```
+
 3. **Set up environment variables:**
 
-   Create a `.env` file in the root of the project and add the following variables (ensure MongoDB and other configurations are set correctly):
+   Create a `.env` file in the root of the project and in each service directory (`authentication-service`, `user-management-service`, `file-management-service`, `email-notification-service`), and add the following variables (ensure MongoDB and other configurations are set correctly):
 
    ```plaintext
    JWT_SECRET=your_jwt_secret
@@ -81,22 +98,52 @@ Before you can run the application, ensure that the following tools are installe
    EMAIL_PASSWORD=your_email_password
    ```
 
-4. **Run the microservices**:
+4. **Run the microservices:**
 
-   You can start each microservice independently, or run them all simultaneously.
+   You can start each microservice independently, or run them all **concurrently**.
 
-   - To start an individual service, use:
+   - **To start individual services**, run the following commands from each service's directory:
+
      ```bash
-     npm run start:auth    # Starts Authentication Service
-     npm run start:user    # Starts User Management Service
-     npm run start:file    # Starts File Management Service
-     npm run start:email   # Starts Email Notification Service
+     npm run dev    # Starts the service (e.g., authentication-service)
      ```
 
-   - To start all services at once, use:
-     ```bash
-     npm run start:all
-     ```
+   - **To start all services at once**, use one of the following options:
+
+     
+
+         ```bash
+         pm2 start services/authentication-service/src/index.js --name auth-service
+         pm2 start services/user-management-service/src/index.js --name user-service
+         pm2 start services/file-management-service/src/index.js --name file-service
+         pm2 start services/email-notification-service/src/index.js --name email-service
+         ```
+
+     - **Using concurrently** (for development):
+
+       - Install `concurrently` in the root project directory:
+
+         ```bash
+         npm install concurrently --save-dev
+         ```
+
+       - Add a `start:all` script to the root `package.json`:
+
+         ```json
+         "scripts": {
+           "start:all": "concurrently "npm run start:auth" "npm run start:user" "npm run start:file" "npm run start:email"",
+           "start:auth": "cd services/authentication-service && npm run dev",
+           "start:user": "cd services/user-management-service && npm run dev",
+           "start:file": "cd services/file-management-service && npm run dev",
+           "start:email": "cd services/email-notification-service && npm run dev"
+         }
+         ```
+
+       - Now, you can start all services at once using:
+
+         ```bash
+         npm run start:all
+         ```
 
 ---
 
@@ -192,16 +239,14 @@ You can test all API endpoints using **Postman**. The collection is available [h
 
 ---
 
-- **services/auth-service**: Handles user authentication and JWT generation.
-- **services/user-service**: Manages user profiles and updates.
-- **services/file-service**: Uploads and serves user files.
-- **services/email-service**: Sends email notifications.
-
----
-
 ## Deployment Notes
 
 - Ensure MongoDB is up and running (you can use **MongoDB Atlas** if preferred).
 - Set environment variables in the `.env` file with the appropriate values (including database URI and JWT secret).
 - If using AWS S3, make sure to configure the AWS SDK and update the file management service to store files in S3 instead of locally.
 
+---
+
+## License
+
+This project is licensed under the ISC License.
