@@ -1,0 +1,8 @@
+{"scripts": {
+  "start:all": "concurrently \"npm run start:auth\" \"npm run start:user\" \"npm run start:file\" \"npm run start:email\"",
+  "start:auth": "cd services/authentication-service && npm run dev",
+  "start:user": "cd services/user-management-service && npm run dev",
+  "start:file": "cd services/file-management-service && npm run dev",
+  "start:email": "cd services/email-notification-service && npm run dev"
+}
+}
