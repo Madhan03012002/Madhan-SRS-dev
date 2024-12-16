@@ -1,9 +1,10 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-dotenv.config();
+import mongoose from "mongoose";
+import * as dotenv from 'dotenv'
+
+dotenv.config()
 const DB_CONNTION_STRING = process.env.DB_CONNTION_STRING ? process.env.DB_CONNTION_STRING : "DB_CONNTION_STRING"
 
-const initmongo = () => {
+export const initmongo = () => {
     try {
         mongoose.set('strictQuery', true);
         mongoose.connect(DB_CONNTION_STRING);
@@ -15,5 +16,3 @@ const initmongo = () => {
         console.log(err);
     }
 }
-
-export {initmongo}
